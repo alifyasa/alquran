@@ -5,6 +5,7 @@ import '../styles/global.css';
 import FloatingControls from '../components/FloatingControls.astro';
 import Ayah from '../components/Ayah.astro';
 import SurahName from '../components/SurahName.astro';
+import AyahTranslation from '../components/AyahTranslation.astro';
 
 const { surah } = Astro.params;
 
@@ -60,6 +61,10 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 				border: 0.5px solid var(--border-color);
 				margin: 1rem 0;
 			}
+
+			body {
+				padding-bottom: 4rem;
+			}
 		</style>
 	</head>
 	<body>
@@ -71,6 +76,7 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 					<hr />
 					<a href={`#${aya.aya_no}`} class="ayah-number">{aya.sura_no}:{aya.aya_no}</a>
 					<Ayah surah={surahNumber} ayah={aya.aya_no} />
+					<AyahTranslation surah={surahNumber} ayah={aya.aya_no} language="en" translation_id="SaheehInternational" />
 				</div>
 			))}
 		</div>
