@@ -1,5 +1,20 @@
 ---
+import hafsData from '../data/hafs.json';
+import '../styles/global.css';
 
+// Get unique surahs by grouping by sura_no
+const surahsMap = new Map();
+hafsData.forEach((aya) => {
+	if (!surahsMap.has(aya.sura_no)) {
+		surahsMap.set(aya.sura_no, {
+			number: aya.sura_no,
+			nameEn: aya.sura_name_en,
+			nameAr: aya.sura_name_ar,
+		});
+	}
+});
+
+const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number);
 ---
 
 <html lang="en">
@@ -9,8 +24,63 @@
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Al-Qur'an</title>
+		<style>
+			.surah-list {
+				list-style: none;
+				padding: 0;
+			}
+
+			.surah-item {
+				margin: 0.5rem 0;
+			}
+
+			.surah-link {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 0.75rem 1rem;
+				border: 1px solid #ddd;
+				border-radius: 0.25rem;
+				text-decoration: none;
+				color: inherit;
+				transition: background-color 0.2s;
+			}
+
+			.surah-link:hover {
+				background-color: #f5f5f5;
+			}
+
+			.surah-info {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.surah-number {
+				font-weight: bold;
+				color: #666;
+				min-width: 2rem;
+			}
+
+			.surah-name-ar {
+				font-size: 1.25rem;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>Al-Qur'an</h1>
+		<ul class="surah-list">
+			{surahs.map((surah) => (
+				<li class="surah-item">
+					<a href={`/${surah.number}`} class="surah-link">
+						<div class="surah-info">
+							<span class="surah-number">{surah.number}</span>
+							<span>{surah.nameEn}</span>
+						</div>
+						<span class="surah-name-ar">{surah.nameAr}</span>
+					</a>
+				</li>
+			))}
+		</ul>
 	</body>
 </html>

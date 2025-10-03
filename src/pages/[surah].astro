@@ -1,5 +1,7 @@
 ---
 import surahToPage from '../data/surah_to_page.json';
+import hafsData from '../data/hafs.json';
+import '../styles/global.css';
 
 export function getStaticPaths() {
 	return Object.keys(surahToPage).map((surah) => ({
@@ -9,6 +11,14 @@ export function getStaticPaths() {
 
 const { surah } = Astro.params;
 const pages = surahToPage[surah as keyof typeof surahToPage];
+
+const surahNumber = parseInt(surah);
+const ayahs = hafsData
+	.filter((aya) => aya.sura_no === surahNumber)
+	.sort((a, b) => a.aya_no - b.aya_no);
+
+const surahName = ayahs[0]?.sura_name_en || '';
+const surahNameAr = ayahs[0]?.sura_name_ar || '';
 ---
 
 <html lang="en">
@@ -18,9 +28,80 @@ const pages = surahToPage[surah as keyof typeof surahToPage];
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Surah {surah}</title>
+		<style>
+			.arabic {
+				font-family: 'Uthmanic Hafs', serif;
+				font-size: 1.5rem;
+				direction: rtl;
+				text-align: right;
+				line-height: 2;
+			}
+
+			.surah-name-ar {
+				font-family: 'Uthmanic Hafs', serif;
+				font-size: 2rem;
+			}
+
+			.ayah-number {
+				font-size: 0.75rem;
+				color: #666;
+				display: block;
+				margin-bottom: 0.5rem;
+				font-family: serif;
+			}
+
+			.back-home {
+				display: inline-block;
+				margin-bottom: 1rem;
+				color: #000;
+				text-decoration: none;
+				font-size: 0.875rem;
+			}
+
+			.back-home:hover {
+				text-decoration: underline;
+			}
+
+			.scroll-to-top {
+				position: fixed;
+				bottom: 1rem;
+				right: 1rem;
+				width: 2rem;
+				height: 2rem;
+				border-radius: 50%;
+				background-color: #000;
+				color: white;
+				border: none;
+				font-size: 1rem;
+				cursor: pointer;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+				transition: background-color 0.3s;
+			}
+
+			.scroll-to-top:hover {
+				background-color: #333;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Surah: {surah}</h1>
-		<p>Pages: {pages?.join(', ')}</p>
+		<a href="/" class="back-home">← Back to Home</a>
+		<h1>Surah {surah}: {surahName} (<span class="surah-name-ar">{surahNameAr}</span>)</h1>
+		<div>
+			{ayahs.map((aya) => (
+				<div key={aya.id}>
+					<hr style="border: 0.5px solid black; margin: 1rem 0;" />
+					<span class="ayah-number">{aya.sura_no}:{aya.aya_no}</span>
+					<p class="arabic">{aya.aya_text}</p>
+				</div>
+			))}
+		</div>
+		<button id="scroll-to-top" class="scroll-to-top">↑</button>
+		<script>
+			const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+			scrollToTopBtn?.addEventListener('click', () => {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		</script>
 	</body>
 </html>
