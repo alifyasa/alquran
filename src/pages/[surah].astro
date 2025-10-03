@@ -2,7 +2,7 @@
 import surahToPage from '../data/surah_to_page.json';
 import hafsData from '../data/hafs.json';
 import '../styles/global.css';
-import ScrollToTop from '../components/ScrollToTop.astro';
+import FloatingControls from '../components/FloatingControls.astro';
 import Ayah from '../components/Ayah.astro';
 import SurahName from '../components/SurahName.astro';
 
@@ -31,10 +31,17 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Surah {surah}</title>
+		<script is:inline>
+			// Apply theme before page renders to prevent flicker
+			const theme = localStorage.getItem('theme');
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark-theme');
+			}
+		</script>
 		<style>
 			.ayah-number {
 				font-size: 1.25rem;
-				color: #666;
+				color: var(--secondary-text);
 				display: block;
 				margin-bottom: 0.5rem;
 				font-family: serif;
@@ -43,13 +50,18 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 			.back-home {
 				display: inline-block;
 				margin-bottom: 1rem;
-				color: #000;
+				color: var(--link-color);
 				text-decoration: none;
 				font-size: 0.875rem;
 			}
 
 			.back-home:hover {
 				text-decoration: underline;
+			}
+
+			hr {
+				border: 0.5px solid var(--border-color);
+				margin: 1rem 0;
 			}
 		</style>
 	</head>
@@ -59,12 +71,12 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 		<div>
 			{ayahs.map((aya) => (
 				<div key={aya.id}>
-					<hr style="border: 0.5px solid black; margin: 1rem 0;" />
+					<hr />
 					<span class="ayah-number">{aya.sura_no}:{aya.aya_no}</span>
 					<Ayah surah={surahNumber} ayah={aya.aya_no} />
 				</div>
 			))}
 		</div>
-		<ScrollToTop />
+		<FloatingControls />
 	</body>
 </html>

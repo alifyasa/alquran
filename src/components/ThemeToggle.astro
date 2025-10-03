@@ -1,0 +1,65 @@
+---
+---
+
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+	<span class="theme-icon">☀️</span>
+</button>
+
+<style>
+	.theme-toggle {
+		position: fixed;
+		bottom: 1rem;
+		left: 1rem;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		background-color: #000;
+		color: white;
+		border: none;
+		font-size: 1rem;
+		cursor: pointer;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		transition: background-color 0.3s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.theme-toggle:hover {
+		background-color: #333;
+	}
+
+	:global(body.dark-theme) .theme-toggle {
+		background-color: #fff;
+		color: #000;
+	}
+
+	:global(body.dark-theme) .theme-toggle:hover {
+		background-color: #ddd;
+	}
+</style>
+
+<script>
+	const themeToggle = document.getElementById('theme-toggle');
+	const themeIcon = themeToggle?.querySelector('.theme-icon');
+
+	// Check for saved theme preference or default to light mode
+	const currentTheme = localStorage.getItem('theme') || 'light';
+
+	if (currentTheme === 'dark') {
+		document.body.classList.add('dark-theme');
+		if (themeIcon) themeIcon.textContent = '🌙';
+	}
+
+	themeToggle?.addEventListener('click', () => {
+		document.body.classList.toggle('dark-theme');
+
+		if (document.body.classList.contains('dark-theme')) {
+			localStorage.setItem('theme', 'dark');
+			if (themeIcon) themeIcon.textContent = '🌙';
+		} else {
+			localStorage.setItem('theme', 'light');
+			if (themeIcon) themeIcon.textContent = '☀️';
+		}
+	});
+</script>

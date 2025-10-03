@@ -2,6 +2,7 @@
 import hafsData from '../data/hafs.json';
 import '../styles/global.css';
 import SurahName from '../components/SurahName.astro';
+import FloatingControls from '../components/FloatingControls.astro';
 
 // Get unique surahs by grouping by sura_no
 const surahsMap = new Map();
@@ -25,6 +26,13 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Al-Qur'an</title>
+		<script is:inline>
+			// Apply theme before page renders to prevent flicker
+			const theme = localStorage.getItem('theme');
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark-theme');
+			}
+		</script>
 		<style>
 			.surah-list {
 				list-style: none;
@@ -40,15 +48,15 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 				justify-content: space-between;
 				align-items: center;
 				padding: 0.75rem 1rem;
-				border: 1px solid #ddd;
+				border: 1px solid var(--border-color);
 				border-radius: 0.25rem;
 				text-decoration: none;
-				color: inherit;
+				color: var(--link-color);
 				transition: background-color 0.2s;
 			}
 
 			.surah-link:hover {
-				background-color: #f5f5f5;
+				background-color: var(--hover-bg);
 			}
 
 			.surah-info {
@@ -59,7 +67,7 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 
 			.surah-number {
 				font-weight: bold;
-				color: #666;
+				color: var(--secondary-text);
 				min-width: 2rem;
 			}
 
@@ -83,5 +91,6 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 				</li>
 			))}
 		</ul>
+		<FloatingControls />
 	</body>
 </html>
