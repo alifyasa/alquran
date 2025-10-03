@@ -6,13 +6,10 @@ import FloatingControls from '../components/FloatingControls.astro';
 import Ayah from '../components/Ayah.astro';
 import SurahName from '../components/SurahName.astro';
 
-export function getStaticPaths() {
-	return Object.keys(surahToPage).map((surah) => ({
-		params: { surah },
-	}));
-}
-
 const { surah } = Astro.params;
+
+// Set cache headers for browser/CDN caching
+Astro.response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
 const pages = surahToPage[surah as keyof typeof surahToPage];
 
 const surahNumber = parseInt(surah);
@@ -66,13 +63,13 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 		</style>
 	</head>
 	<body>
-		<a href="/" class="back-home">← Back to Home</a>
+		<a href={`/#${surahNumber}`} class="back-home">← Back to Home</a>
 		<h1>Surah {surah}: {surahName} (<SurahName surah={surahNumber} />)</h1>
 		<div>
 			{ayahs.map((aya) => (
-				<div key={aya.id}>
+				<div key={aya.id} id={aya.aya_no}>
 					<hr />
-					<span class="ayah-number">{aya.sura_no}:{aya.aya_no}</span>
+					<a href={`#${aya.aya_no}`} class="ayah-number">{aya.sura_no}:{aya.aya_no}</a>
 					<Ayah surah={surahNumber} ayah={aya.aya_no} />
 				</div>
 			))}

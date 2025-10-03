@@ -80,7 +80,7 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 		<h1>Al-Qur'an</h1>
 		<ul class="surah-list">
 			{surahs.map((surah) => (
-				<li class="surah-item">
+				<li class="surah-item" id={surah.number}>
 					<a href={`/${surah.number}`} class="surah-link">
 						<div class="surah-info">
 							<span class="surah-number">{surah.number}</span>
