@@ -2,6 +2,7 @@
 import surahToPage from '../data/surah_to_page.json';
 import hafsData from '../data/hafs.json';
 import '../styles/global.css';
+import ScrollToTop from '../components/ScrollToTop.astro';
 
 export function getStaticPaths() {
 	return Object.keys(surahToPage).map((surah) => ({
@@ -61,26 +62,6 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 			.back-home:hover {
 				text-decoration: underline;
 			}
-
-			.scroll-to-top {
-				position: fixed;
-				bottom: 1rem;
-				right: 1rem;
-				width: 2rem;
-				height: 2rem;
-				border-radius: 50%;
-				background-color: #000;
-				color: white;
-				border: none;
-				font-size: 1rem;
-				cursor: pointer;
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-				transition: background-color 0.3s;
-			}
-
-			.scroll-to-top:hover {
-				background-color: #333;
-			}
 		</style>
 	</head>
 	<body>
@@ -95,13 +76,6 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 				</div>
 			))}
 		</div>
-		<button id="scroll-to-top" class="scroll-to-top">↑</button>
-		<script>
-			const scrollToTopBtn = document.getElementById('scroll-to-top');
-
-			scrollToTopBtn?.addEventListener('click', () => {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
-			});
-		</script>
+		<ScrollToTop />
 	</body>
 </html>
