@@ -3,6 +3,8 @@ import surahToPage from '../data/surah_to_page.json';
 import hafsData from '../data/hafs.json';
 import '../styles/global.css';
 import ScrollToTop from '../components/ScrollToTop.astro';
+import Ayah from '../components/Ayah.astro';
+import SurahName from '../components/SurahName.astro';
 
 export function getStaticPaths() {
 	return Object.keys(surahToPage).map((surah) => ({
@@ -30,19 +32,6 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 		<meta name="generator" content={Astro.generator} />
 		<title>Surah {surah}</title>
 		<style>
-			.arabic {
-				font-family: 'Uthmanic Hafs', serif;
-				font-size: 1.5rem;
-				direction: rtl;
-				text-align: right;
-				line-height: 2;
-			}
-
-			.surah-name-ar {
-				font-family: 'Uthmanic Hafs', serif;
-				font-size: 2rem;
-			}
-
 			.ayah-number {
 				font-size: 0.75rem;
 				color: #666;
@@ -66,13 +55,13 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 	</head>
 	<body>
 		<a href="/" class="back-home">← Back to Home</a>
-		<h1>Surah {surah}: {surahName} (<span class="surah-name-ar">{surahNameAr}</span>)</h1>
+		<h1>Surah {surah}: {surahName} (<SurahName surah={surahNumber} />)</h1>
 		<div>
 			{ayahs.map((aya) => (
 				<div key={aya.id}>
 					<hr style="border: 0.5px solid black; margin: 1rem 0;" />
 					<span class="ayah-number">{aya.sura_no}:{aya.aya_no}</span>
-					<p class="arabic">{aya.aya_text}</p>
+					<Ayah surah={surahNumber} ayah={aya.aya_no} />
 				</div>
 			))}
 		</div>

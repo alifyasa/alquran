@@ -1,0 +1,26 @@
+---
+import hafsData from '../data/hafs.json';
+
+interface Props {
+	surah: number;
+	ayah: number;
+}
+
+const { surah, ayah } = Astro.props;
+
+const ayahData = hafsData.find(
+	(aya) => aya.sura_no === surah && aya.aya_no === ayah
+);
+---
+
+<p class="arabic">{ayahData?.aya_text}</p>
+
+<style>
+	.arabic {
+		font-family: 'Uthmanic Hafs', serif;
+		font-size: 1.5rem;
+		direction: rtl;
+		text-align: right;
+		line-height: 2;
+	}
+</style>
