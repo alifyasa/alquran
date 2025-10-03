@@ -81,5 +81,46 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 			))}
 		</div>
 		<FloatingControls />
+		<script>
+			// Keyboard navigation for ayahs
+			const ayahElements = Array.from(document.querySelectorAll('[id]')).filter(
+				(el) => /^\d+$/.test(el.id)
+			);
+
+			let currentAyahIndex = 0;
+
+			// Track current ayah using hash or first ayah
+			const currentHash = window.location.hash.slice(1);
+			if (currentHash) {
+				const index = ayahElements.findIndex((el) => el.id === currentHash);
+				if (index !== -1) currentAyahIndex = index;
+			}
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'ArrowRight') {
+					// Next ayah
+					if (currentAyahIndex < ayahElements.length - 1) {
+						currentAyahIndex++;
+						const nextAyah = ayahElements[currentAyahIndex];
+						nextAyah.scrollIntoView({
+							behavior: 'smooth',
+							block: 'center'
+						});
+						history.replaceState(null, '', '#' + nextAyah.id);
+					}
+				} else if (e.key === 'ArrowLeft') {
+					// Previous ayah
+					if (currentAyahIndex > 0) {
+						currentAyahIndex--;
+						const prevAyah = ayahElements[currentAyahIndex];
+						prevAyah.scrollIntoView({
+							behavior: 'smooth',
+							block: 'center'
+						});
+						history.replaceState(null, '', '#' + prevAyah.id);
+					}
+				}
+			});
+		</script>
 	</body>
 </html>
