@@ -27,7 +27,7 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Surah {surah}</title>
+		<title>{surahName}</title>
 		<script is:inline>
 			// Apply theme before page renders to prevent flicker
 			const theme = localStorage.getItem('theme');
@@ -64,7 +64,7 @@ const surahNameAr = ayahs[0]?.sura_name_ar || '';
 	</head>
 	<body>
 		<a href={`/#${surahNumber}`} class="back-home">← Back to Home</a>
-		<h1>Surah {surah}: {surahName} (<SurahName surah={surahNumber} />)</h1>
+		<h1>{surahName} (<SurahName surah={surahNumber} />)</h1>
 		<div>
 			{ayahs.map((aya) => (
 				<div key={aya.id} id={aya.aya_no}>
