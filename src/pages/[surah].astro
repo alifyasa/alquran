@@ -1,0 +1,26 @@
+---
+import surahToPage from '../data/surah_to_page.json';
+
+export function getStaticPaths() {
+	return Object.keys(surahToPage).map((surah) => ({
+		params: { surah },
+	}));
+}
+
+const { surah } = Astro.params;
+const pages = surahToPage[surah as keyof typeof surahToPage];
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Surah {surah}</title>
+	</head>
+	<body>
+		<h1>Surah: {surah}</h1>
+		<p>Pages: {pages?.join(', ')}</p>
+	</body>
+</html>
