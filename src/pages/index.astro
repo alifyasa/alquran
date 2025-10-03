@@ -1,6 +1,7 @@
 ---
 import hafsData from '../data/hafs.json';
 import '../styles/global.css';
+import SurahName from '../components/SurahName.astro';
 
 // Get unique surahs by grouping by sura_no
 const surahsMap = new Map();
@@ -62,7 +63,7 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 				min-width: 2rem;
 			}
 
-			.surah-name-ar {
+			.surah-name-en {
 				font-size: 1.25rem;
 			}
 		</style>
@@ -75,9 +76,9 @@ const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number
 					<a href={`/${surah.number}`} class="surah-link">
 						<div class="surah-info">
 							<span class="surah-number">{surah.number}</span>
-							<span>{surah.nameEn}</span>
+							<span class="surah-name-en">{surah.nameEn}</span>
 						</div>
-						<span class="surah-name-ar">{surah.nameAr}</span>
+						<SurahName surah={surah.number} />
 					</a>
 				</li>
 			))}
