@@ -1,5 +1,13 @@
 # Al-Quran
 
+## Motivation
+
+1. I use quran.com.
+2. I want to navigate between verses through keyboard shortcuts, but they don't have that feature.
+3. I tried making a user script, but failed because they used a virtualized list.
+4. I wanted to make a fork and change it myself, but they say to not copy the project.
+5. So I made my own.
+
 ## Acknowledgements
 
 ### Mushaf
@@ -15,3 +23,7 @@
 ### Translations
 
 1. https://tanzil.net/trans/
+
+### Other Data
+
+1. https://github.com/quran/quran.com-frontend-next/blob/v0.0.12/data/page-to-chapter-mappings.json
