@@ -1,126 +1,115 @@
 ---
-import surahToPage from '../data/surah_to_page.json';
-import hafsData from '../data/hafs.json';
-import '../styles/global.css';
-import FloatingControls from '../components/FloatingControls.astro';
-import Ayah from '../components/Ayah.astro';
-import SurahName from '../components/SurahName.astro';
-import AyahTranslation from '../components/AyahTranslation.astro';
+import hafsData from "../data/hafs.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FloatingControls from "../components/FloatingControls.astro";
+import Ayah from "../components/Ayah.astro";
+import SurahName from "../components/SurahName.astro";
+import AyahTranslation from "../components/AyahTranslation.astro";
 
 const { surah } = Astro.params;
 
+if (!surah) {
+  return Astro.redirect('/');
+}
+
 // Set cache headers for browser/CDN caching
-Astro.response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
-const pages = surahToPage[surah as keyof typeof surahToPage];
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=3600, s-maxage=86400",
+);
 
 const surahNumber = parseInt(surah);
 const ayahs = hafsData
-	.filter((aya) => aya.sura_no === surahNumber)
-	.sort((a, b) => a.aya_no - b.aya_no);
+  .filter((aya) => aya.sura_no === surahNumber)
+  .sort((a, b) => a.aya_no - b.aya_no);
 
-const surahName = ayahs[0]?.sura_name_en || '';
-const surahNameAr = ayahs[0]?.sura_name_ar || '';
+if (ayahs.length === 0) {
+  return Astro.redirect('/');
+}
+
+const surahName = ayahs[0]?.sura_name_en || "";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{surahName}</title>
-		<script is:inline>
-			// Apply theme before page renders to prevent flicker
-			const theme = localStorage.getItem('theme');
-			if (theme === 'dark') {
-				document.documentElement.classList.add('dark-theme');
-			}
-		</script>
-		<style>
-			.ayah-number {
-				font-size: 1.25rem;
-				color: var(--secondary-text);
-				display: block;
-				margin-bottom: 0.5rem;
-				font-family: serif;
-			}
+<BaseLayout title={surahName}>
+  <a
+    href={`/#${surahNumber}`}
+    class="mb-4 inline-block font-serif text-xl text-black no-underline hover:underline dark:text-white"
+    >← Back to Home</a
+  >
+  <h1 class="mt-8 mb-16 font-serif text-3xl">
+    {surahName} (<SurahName surah={surahNumber} />)
+  </h1>
+  {
+    surahNumber != 9 && (
+      <h2 class="font-qcf2-bsml rtl mb-16 text-center text-4xl">
+        {["0026", "0025", "0024"].map((s) =>
+          String.fromCodePoint(parseInt(s, 16)),
+        )}
+      </h2>
+    )
+  }
+  <div class="pb-24">
+    {
+      ayahs.map((aya) => (
+        <div id={aya.aya_no.toString()}>
+          <hr class="my-4 border-t border-neutral-300 dark:border-neutral-600" />
+          <a
+            href={`#${aya.aya_no}`}
+            class="mb-2 block font-serif text-xl text-neutral-500 dark:text-neutral-400"
+          >
+            {aya.sura_no}:{aya.aya_no}
+          </a>
+          <Ayah surah={surahNumber} ayah={aya.aya_no} />
+          <AyahTranslation
+            surah={surahNumber}
+            ayah={aya.aya_no}
+            language="en"
+            translation_id="saheeh"
+          />
+        </div>
+      ))
+    }
+  </div>
+  <FloatingControls />
+  <script>
+    // Keyboard navigation for ayahs
+    const ayahElements = Array.from(document.querySelectorAll("[id]")).filter(
+      (el) => /^\d+$/.test(el.id),
+    );
 
-			.back-home {
-				display: inline-block;
-				margin-bottom: 1rem;
-				color: var(--link-color);
-				text-decoration: none;
-				font-size: 0.875rem;
-			}
+    let currentAyahIndex = 0;
 
-			.back-home:hover {
-				text-decoration: underline;
-			}
+    // Track current ayah using hash or first ayah
+    const currentHash = window.location.hash.slice(1);
+    if (currentHash) {
+      const index = ayahElements.findIndex((el) => el.id === currentHash);
+      if (index !== -1) currentAyahIndex = index;
+    }
 
-			hr {
-				border: 0.5px solid var(--border-color);
-				margin: 1rem 0;
-			}
-
-			body {
-				padding-bottom: 4rem;
-			}
-		</style>
-	</head>
-	<body>
-		<a href={`/#${surahNumber}`} class="back-home">← Back to Home</a>
-		<h1>{surahName} (<SurahName surah={surahNumber} />)</h1>
-		<div>
-			{ayahs.map((aya) => (
-				<div key={aya.id} id={aya.aya_no}>
-					<hr />
-					<a href={`#${aya.aya_no}`} class="ayah-number">{aya.sura_no}:{aya.aya_no}</a>
-					<Ayah surah={surahNumber} ayah={aya.aya_no} />
-					<AyahTranslation surah={surahNumber} ayah={aya.aya_no} language="en" translation_id="saheeh" />
-				</div>
-			))}
-		</div>
-		<FloatingControls />
-		<script>
-			// Keyboard navigation for ayahs
-			const ayahElements = Array.from(document.querySelectorAll('[id]')).filter(
-				(el) => /^\d+$/.test(el.id)
-			);
-
-			let currentAyahIndex = 0;
-
-			// Track current ayah using hash or first ayah
-			const currentHash = window.location.hash.slice(1);
-			if (currentHash) {
-				const index = ayahElements.findIndex((el) => el.id === currentHash);
-				if (index !== -1) currentAyahIndex = index;
-			}
-
-			document.addEventListener('keydown', (e) => {
-				if (e.key === 'ArrowRight') {
-					// Next ayah
-					if (currentAyahIndex < ayahElements.length - 1) {
-						currentAyahIndex++;
-						const nextAyah = ayahElements[currentAyahIndex];
-						nextAyah.scrollIntoView({
-							behavior: 'smooth',
-							block: 'center'
-						});
-						history.replaceState(null, '', '#' + nextAyah.id);
-					}
-				} else if (e.key === 'ArrowLeft') {
-					// Previous ayah
-					if (currentAyahIndex > 0) {
-						currentAyahIndex--;
-						const prevAyah = ayahElements[currentAyahIndex];
-						prevAyah.scrollIntoView({
-							behavior: 'smooth',
-							block: 'center'
-						});
-						history.replaceState(null, '', '#' + prevAyah.id);
-					}
-				}
-			});
-		</script>
-	</body>
-</html>
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") {
+        // Next ayah
+        if (currentAyahIndex < ayahElements.length - 1) {
+          currentAyahIndex++;
+          const nextAyah = ayahElements[currentAyahIndex];
+          nextAyah.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          history.replaceState(null, "", "#" + nextAyah.id);
+        }
+      } else if (e.key === "ArrowLeft") {
+        // Previous ayah
+        if (currentAyahIndex > 0) {
+          currentAyahIndex--;
+          const prevAyah = ayahElements[currentAyahIndex];
+          prevAyah.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          history.replaceState(null, "", "#" + prevAyah.id);
+        }
+      }
+    });
+  </script>
+</BaseLayout>

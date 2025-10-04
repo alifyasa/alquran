@@ -1,37 +1,22 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-uthmanic-hafs: "Uthmanic Hafs", serif;
+  --font-qcf2-bsml: "QCF2BSML", serif;
+}
+
 @font-face {
-	font-family: 'Uthmanic Hafs';
-	src: url('/fonts/uthmanic_hafs_v20.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
+  font-family: "Uthmanic Hafs";
+  src: url("/fonts/uthmanic_hafs_v20.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
-:root {
-	--bg-color: #ffffff;
-	--text-color: #000000;
-	--border-color: #ddd;
-	--hover-bg: #f5f5f5;
-	--link-color: #000000;
-	--secondary-text: #666;
-}
-
-html.dark-theme {
-	--bg-color: #1a1a1a;
-	--text-color: #ffffff;
-	--border-color: #333;
-	--hover-bg: #2a2a2a;
-	--link-color: #ffffff;
-	--secondary-text: #cccccc;
-}
-
-body {
-	max-width: 50rem;
-	margin: 0 auto;
-	padding: 1rem;
-	background-color: var(--bg-color);
-	color: var(--text-color);
-	transition: background-color 0.3s, color 0.3s;
-}
-
-.surah-name-ar {
-	font-family: 'Uthmanic Hafs', serif;
+@font-face {
+  font-family: "QCF2BSML";
+  src: url("/fonts/QCF2BSML.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }

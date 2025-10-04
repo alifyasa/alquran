@@ -1,85 +1,49 @@
 ---
+
 ---
 
-<div class="floating-controls">
-	<button id="theme-toggle" class="control-button" aria-label="Toggle theme">
-		<span class="theme-icon">☀</span>
-	</button>
-	<button id="scroll-to-top" class="control-button">↑</button>
+<div class="fixed right-4 bottom-4 z-50 flex flex-col gap-2">
+  <button
+    id="theme-toggle"
+    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+    aria-label="Toggle theme"
+  >
+    <span class="theme-icon">☀</span>
+  </button>
+  <button
+    id="scroll-to-top"
+    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+    >↑</button
+  >
 </div>
 
-<style>
-	.floating-controls {
-		position: fixed;
-		bottom: 1rem;
-		right: 1rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		z-index: 1000;
-	}
-
-	.control-button {
-		width: 2rem;
-		height: 2rem;
-		border-radius: 50%;
-		background-color: #000;
-		color: white;
-		border: none;
-		font-size: 1rem;
-		cursor: pointer;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-		transition: background-color 0.3s;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.control-button:hover {
-		background-color: #333;
-	}
-
-	:global(html.dark-theme) .control-button {
-		background-color: #fff;
-		color: #000;
-	}
-
-	:global(html.dark-theme) .control-button:hover {
-		background-color: #ddd;
-	}
-
-	.theme-icon {
-		filter: none;
-	}
-</style>
-
 <script>
-	const themeToggle = document.getElementById('theme-toggle');
-	const themeIcon = themeToggle?.querySelector('.theme-icon');
-	const scrollToTopBtn = document.getElementById('scroll-to-top');
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = themeToggle?.querySelector(".theme-icon");
+  const scrollToTopBtn = document.getElementById("scroll-to-top");
 
-	// Theme toggle functionality
-	const currentTheme = localStorage.getItem('theme') || 'light';
+  // Theme toggle functionality
+  const currentTheme = localStorage.getItem("theme") || "light";
 
-	if (currentTheme === 'dark') {
-		document.documentElement.classList.add('dark-theme');
-		if (themeIcon) themeIcon.textContent = '☾';
-	}
+  if (currentTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    if (themeIcon) themeIcon.textContent = "☾";
+  }
 
-	themeToggle?.addEventListener('click', () => {
-		document.documentElement.classList.toggle('dark-theme');
+  themeToggle?.addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark");
 
-		if (document.documentElement.classList.contains('dark-theme')) {
-			localStorage.setItem('theme', 'dark');
-			if (themeIcon) themeIcon.textContent = '☾';
-		} else {
-			localStorage.setItem('theme', 'light');
-			if (themeIcon) themeIcon.textContent = '☀';
-		}
-	});
+    if (document.documentElement.classList.contains("dark")) {
+      localStorage.setItem("theme", "dark");
+      if (themeIcon) themeIcon.textContent = "☾";
+    } else {
+      localStorage.setItem("theme", "light");
+      if (themeIcon) themeIcon.textContent = "☀";
+    }
+  });
 
-	// Scroll to top functionality
-	scrollToTopBtn?.addEventListener('click', () => {
-		window.scrollTo({ top: 0, behavior: 'smooth' });
-	});
+  // Scroll to top functionality
+  scrollToTopBtn?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 </script>

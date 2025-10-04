@@ -1,28 +1,23 @@
 ---
 interface Props {
-	surah: number;
-	ayah: number;
-	language: string;
-	translation_id: string;
+  surah: number;
+  ayah: number;
+  language: string;
+  translation_id: string;
 }
 
 const { surah, ayah, language, translation_id } = Astro.props;
 
 // Dynamically import translation data
-const translationData = await import(`../data/translations/${language}/${translation_id}.json`);
+const translationData = await import(
+  `../data/translations/${language}/${translation_id}.json`
+);
 
 // Get the translation text for this specific ayah
-const translationText = translationData.default[surah.toString()]?.[ayah.toString()] || '';
+const translationText =
+  translationData.default[surah.toString()]?.[ayah.toString()] || "";
 ---
 
-<p class="translation">{translationText}</p>
-
-<style>
-	.translation {
-		font-size: 1.125rem;
-		color: var(--text-color);
-		line-height: 1.8;
-		margin-top: 1rem;
-		font-family: serif;
-	}
-</style>
+<p class="mt-8 font-serif text-xl leading-8 text-black dark:text-white">
+  {translationText}
+</p>

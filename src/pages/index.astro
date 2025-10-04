@@ -1,96 +1,47 @@
 ---
-import hafsData from '../data/hafs.json';
-import '../styles/global.css';
-import SurahName from '../components/SurahName.astro';
-import FloatingControls from '../components/FloatingControls.astro';
+import hafsData from "../data/hafs.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SurahName from "../components/SurahName.astro";
+import FloatingControls from "../components/FloatingControls.astro";
 
 // Get unique surahs by grouping by sura_no
 const surahsMap = new Map();
 hafsData.forEach((aya) => {
-	if (!surahsMap.has(aya.sura_no)) {
-		surahsMap.set(aya.sura_no, {
-			number: aya.sura_no,
-			nameEn: aya.sura_name_en,
-			nameAr: aya.sura_name_ar,
-		});
-	}
+  if (!surahsMap.has(aya.sura_no)) {
+    surahsMap.set(aya.sura_no, {
+      number: aya.sura_no,
+      nameEn: aya.sura_name_en,
+      nameAr: aya.sura_name_ar,
+    });
+  }
 });
 
-const surahs = Array.from(surahsMap.values()).sort((a, b) => a.number - b.number);
+const surahs = Array.from(surahsMap.values()).sort(
+  (a, b) => a.number - b.number,
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Al-Qur'an</title>
-		<script is:inline>
-			// Apply theme before page renders to prevent flicker
-			const theme = localStorage.getItem('theme');
-			if (theme === 'dark') {
-				document.documentElement.classList.add('dark-theme');
-			}
-		</script>
-		<style>
-			.surah-list {
-				list-style: none;
-				padding: 0;
-			}
-
-			.surah-item {
-				margin: 0.5rem 0;
-			}
-
-			.surah-link {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 0.75rem 1rem;
-				border: 1px solid var(--border-color);
-				border-radius: 0.25rem;
-				text-decoration: none;
-				color: var(--link-color);
-				transition: background-color 0.2s;
-			}
-
-			.surah-link:hover {
-				background-color: var(--hover-bg);
-			}
-
-			.surah-info {
-				display: flex;
-				align-items: center;
-				gap: 1rem;
-			}
-
-			.surah-number {
-				font-weight: bold;
-				color: var(--secondary-text);
-				min-width: 2rem;
-			}
-
-			.surah-name-en {
-				font-size: 1.25rem;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Al-Qur'an</h1>
-		<ul class="surah-list">
-			{surahs.map((surah) => (
-				<li class="surah-item" id={surah.number}>
-					<a href={`/${surah.number}`} class="surah-link">
-						<div class="surah-info">
-							<span class="surah-number">{surah.number}</span>
-							<span class="surah-name-en">{surah.nameEn}</span>
-						</div>
-						<SurahName surah={surah.number} />
-					</a>
-				</li>
-			))}
-		</ul>
-		<FloatingControls />
-	</body>
-</html>
+<BaseLayout title="Al-Qur'an">
+  <h1 class="mt-8 mb-16 font-serif text-5xl">Al-Qur'an</h1>
+  <ul class="list-none p-0 pb-8">
+    {
+      surahs.map((surah) => (
+        <li class="my-4" id={surah.number}>
+          <a
+            href={`/${surah.number}`}
+            class="flex items-center justify-between rounded border border-neutral-300 px-6 py-6 text-black no-underline transition-colors duration-200 hover:bg-neutral-100 dark:border-neutral-600 dark:text-white dark:hover:bg-neutral-800"
+          >
+            <div class="flex items-center gap-8">
+              <span class="min-w-8 font-sans text-xl font-bold text-neutral-500 dark:text-neutral-400">
+                {surah.number}
+              </span>
+              <span class="font-serif text-2xl">{surah.nameEn}</span>
+            </div>
+            <SurahName surah={surah.number} />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <FloatingControls />
+</BaseLayout>
