@@ -5,12 +5,13 @@ import FloatingControls from "../components/FloatingControls.astro";
 import Ayah from "../components/Ayah.astro";
 import SurahName from "../components/SurahName.astro";
 import AyahTranslation from "../components/AyahTranslation.astro";
+import Bismillah from "../components/Bismillah.astro";
 
 export const prerender = true;
 export async function getStaticPaths() {
-  const surahs = [...new Set(hafsData.map(item => item.sura_no))];
-  return surahs.map(surah => ({
-    params: { surah: surah.toString() }
+  const surahs = [...new Set(hafsData.map((item) => item.sura_no))];
+  return surahs.map((surah) => ({
+    params: { surah: surah.toString() },
   }));
 }
 const { surah } = Astro.params;
@@ -18,7 +19,6 @@ const { surah } = Astro.params;
 if (!surah) {
   return Astro.redirect("/");
 }
-
 
 const surahNumber = parseInt(surah);
 const ayahs = hafsData
@@ -41,15 +41,7 @@ const surahName = ayahs[0]?.sura_name_en || "";
   <h1 class="mt-8 mb-16 font-serif text-3xl">
     {surahName} (<SurahName surah={surahNumber} />)
   </h1>
-  {
-    surahNumber != 9 && (
-      <h2 class="font-qcf2-bsml rtl mb-16 text-center text-4xl">
-        {["0026", "0025", "0024"].map((s) =>
-          String.fromCodePoint(parseInt(s, 16)),
-        )}
-      </h2>
-    )
-  }
+  <Bismillah surahNumber={surahNumber} />
   <div class="pb-24">
     {
       ayahs.map((aya) => (

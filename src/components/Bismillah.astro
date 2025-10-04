@@ -1,0 +1,17 @@
+---
+export interface Props {
+  surahNumber: number;
+}
+
+const { surahNumber } = Astro.props;
+---
+
+{
+  surahNumber !== 9 && (
+    <h2 class="font-qcf2-bsml rtl mb-16 text-center text-4xl">
+      {["0026", "0025", "0024"].map((s) =>
+        String.fromCodePoint(parseInt(s, 16)),
+      )}
+    </h2>
+  )
+}

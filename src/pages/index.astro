@@ -4,6 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SurahName from "../components/SurahName.astro";
 import FloatingControls from "../components/FloatingControls.astro";
 
+export const prerender = true;
+
 // Get unique surahs by grouping by sura_no
 const surahsMap = new Map();
 hafsData.forEach((aya) => {
