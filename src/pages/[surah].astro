@@ -6,17 +6,19 @@ import Ayah from "../components/Ayah.astro";
 import SurahName from "../components/SurahName.astro";
 import AyahTranslation from "../components/AyahTranslation.astro";
 
+export const prerender = true;
+export async function getStaticPaths() {
+  const surahs = [...new Set(hafsData.map(item => item.sura_no))];
+  return surahs.map(surah => ({
+    params: { surah: surah.toString() }
+  }));
+}
 const { surah } = Astro.params;
 
 if (!surah) {
   return Astro.redirect("/");
 }
 
-// Set cache headers for browser/CDN caching
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, max-age=3600, s-maxage=86400",
-);
 
 const surahNumber = parseInt(surah);
 const ayahs = hafsData
