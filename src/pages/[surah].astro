@@ -9,7 +9,7 @@ import AyahTranslation from "../components/AyahTranslation.astro";
 const { surah } = Astro.params;
 
 if (!surah) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
 // Set cache headers for browser/CDN caching
@@ -24,7 +24,7 @@ const ayahs = hafsData
   .sort((a, b) => a.aya_no - b.aya_no);
 
 if (ayahs.length === 0) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 
 const surahName = ayahs[0]?.sura_name_en || "";
@@ -33,7 +33,7 @@ const surahName = ayahs[0]?.sura_name_en || "";
 <BaseLayout title={surahName}>
   <a
     href={`/#${surahNumber}`}
-    class="mb-4 inline-block font-serif text-xl text-black no-underline hover:underline dark:text-white"
+    class="text-md mb-4 inline-block font-serif text-black no-underline hover:underline dark:text-white"
     >← Back to Home</a
   >
   <h1 class="mt-8 mb-16 font-serif text-3xl">
@@ -55,7 +55,7 @@ const surahName = ayahs[0]?.sura_name_en || "";
           <hr class="my-4 border-t border-neutral-300 dark:border-neutral-600" />
           <a
             href={`#${aya.aya_no}`}
-            class="mb-2 block font-serif text-xl text-neutral-500 dark:text-neutral-400"
+            class="mb-2 block font-serif text-lg text-neutral-500 dark:text-neutral-400"
           >
             {aya.sura_no}:{aya.aya_no}
           </a>

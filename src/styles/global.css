@@ -5,6 +5,8 @@
 @theme {
   --font-uthmanic-hafs: "Uthmanic Hafs", serif;
   --font-qcf2-bsml: "QCF2BSML", serif;
+  --font-eb-garamond: "EB Garamond", serif;
+  --font-serif: "EB Garamond", serif;
 }
 
 @font-face {
@@ -18,5 +20,13 @@
   font-family: "QCF2BSML";
   src: url("/fonts/QCF2BSML.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
+.eb-garamond {
+  font-family: "EB Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
   font-style: normal;
 }
