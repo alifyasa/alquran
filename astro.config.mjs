@@ -10,7 +10,7 @@ export default defineConfig({
   output: "server",
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "load",
+    defaultStrategy: "viewport",
   },
   adapter: node({
     mode: "standalone",
