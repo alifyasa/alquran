@@ -17,7 +17,7 @@ const { reciter, surahNumber } = Astro.props;
 
   <button
     id="play-pause-btn"
-     class="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+      class="relative flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
     aria-label="Play/Pause"
   >
     <span id="play-icon" class="relative z-10"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M320-200v-560l440 280-440 280Z"/></svg></span>
@@ -54,21 +54,21 @@ const { reciter, surahNumber } = Astro.props;
   <div class="flex items-center gap-2">
     <button
       id="skip-back"
-      class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip back 10s"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M860-240 500-480l360-240v480Zm-400 0L100-480l360-240v480Z"/></svg></button
+      class="flex h-10 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip back 10s"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="M860-240 500-480l360-240v480Zm-400 0L100-480l360-240v480Z"/></svg></button
     >
     <button
       id="skip-forward"
-      class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip forward 10s"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M100-240v-480l360 240-360 240Zm400 0v-480l360 240-360 240Z"/></svg></button
+      class="flex h-10 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip forward 10s"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="M100-240v-480l360 240-360 240Zm400 0v-480l360 240-360 240Z"/></svg></button
     >
   </div>
 
   <div class="hidden md:flex items-center gap-2">
     <button
       id="mute-btn"
-      class="flex h-9 md:h-10 w-16 md:w-20 items-center justify-center rounded bg-neutral-200 px-2 md:px-3 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Mute/Unmute"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg></button
+      class="flex h-10 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Mute/Unmute"><svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg></button
     >
     <input
       id="volume-slider"
@@ -130,10 +130,11 @@ const { reciter, surahNumber } = Astro.props;
     const savedVolume = localStorage.getItem("recitation-volume") || "1";
     audio.volume = parseFloat(savedVolume);
     volumeSlider.value = savedVolume;
+    let lastVolume = parseFloat(savedVolume);
 
   // Update mute button
   const updateMuteIcon = () => {
-    muteBtn.innerHTML = audio.muted ? '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Z"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg>';
+    muteBtn.innerHTML = audio.muted ? '<svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Z"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg>';
   };
     updateMuteIcon();
 
@@ -193,13 +194,26 @@ const { reciter, surahNumber } = Astro.props;
 
     // Volume
     volumeSlider.addEventListener("input", () => {
+      if (audio.muted) {
+        audio.muted = false;
+        updateMuteIcon();
+      }
       audio.volume = parseFloat(volumeSlider.value);
+      lastVolume = audio.volume;
       localStorage.setItem("recitation-volume", volumeSlider.value);
-      audio.muted = false;
-      updateMuteIcon();
     });
 
     muteBtn.addEventListener("click", () => {
+      if (audio.muted) {
+        // Unmuting: restore previous volume
+        audio.volume = lastVolume;
+        volumeSlider.value = lastVolume.toString();
+      } else {
+        // Muting: store current volume and set to 0
+        lastVolume = audio.volume;
+        audio.volume = 0;
+        volumeSlider.value = "0";
+      }
       audio.muted = !audio.muted;
       updateMuteIcon();
     });
