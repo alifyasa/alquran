@@ -13,18 +13,26 @@ const { reciter, surahNumber } = Astro.props;
   data-surah-number={surahNumber}
   class="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-center gap-4 border-t border-neutral-300 bg-white p-4 dark:border-neutral-600 dark:bg-black"
 >
-   <audio id="recitation-audio" preload="metadata"></audio>
+  <audio id="recitation-audio" preload="metadata"></audio>
 
-   <button
-     id="play-pause-btn"
-     class="relative flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
-     aria-label="Play/Pause"
-   >
-     <span id="play-icon" class="relative z-10">▶</span>
-     <svg id="play-spinner" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4 text-white dark:text-black hidden" viewBox="0 0 24 24">
-       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-     </svg>
-   </button>
+  <button
+    id="play-pause-btn"
+    class="relative flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+    aria-label="Play/Pause"
+  >
+    <span id="play-icon" class="relative z-10">▶</span>
+    <svg
+      id="play-spinner"
+      class="absolute top-1/2 left-1/2 hidden h-4 w-4 -translate-x-1/2 -translate-y-1/2 transform animate-spin text-white dark:text-black"
+      viewBox="0 0 24 24"
+    >
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      ></path>
+    </svg>
+  </button>
 
   <div class="max-w-md flex-1">
     <input
@@ -72,16 +80,6 @@ const { reciter, surahNumber } = Astro.props;
       class="h-2 w-20 cursor-pointer appearance-none rounded-lg bg-neutral-200 dark:bg-neutral-700"
     />
   </div>
-
-  <div
-    id="loading-indicator"
-    class="hidden text-sm text-neutral-600 dark:text-neutral-400"
-  >
-    Loading...
-  </div>
-  <div id="error-message" class="hidden text-sm text-red-600 dark:text-red-400">
-    Audio failed to load
-  </div>
 </div>
 
 <script>
@@ -113,12 +111,14 @@ const { reciter, surahNumber } = Astro.props;
     const loadingIndicator = document.getElementById(
       "loading-indicator",
     ) as HTMLDivElement;
-  const errorMessage = document.getElementById(
-    "error-message",
-  ) as HTMLDivElement;
-  const playSpinner = document.getElementById('play-spinner') as SVGSVGElement;
+    const errorMessage = document.getElementById(
+      "error-message",
+    ) as HTMLDivElement;
+    const playSpinner = document.getElementById(
+      "play-spinner",
+    ) as SVGSVGElement;
 
-  // Read props from data attributes
+    // Read props from data attributes
     const recitationBar = document.getElementById("recitation-bar");
     const reciter = recitationBar.dataset.reciter;
     const surahNumber = parseInt(recitationBar.dataset.surahNumber);
@@ -214,22 +214,22 @@ const { reciter, surahNumber } = Astro.props;
       loadingIndicator.classList.add("hidden");
     });
 
-  // Error
-  audio.addEventListener("error", () => {
-    loadingIndicator.classList.add("hidden");
-    errorMessage.classList.remove("hidden");
-    playPauseBtn.disabled = true;
-  });
+    // Error
+    audio.addEventListener("error", () => {
+      loadingIndicator.classList.add("hidden");
+      errorMessage.classList.remove("hidden");
+      playPauseBtn.disabled = true;
+    });
 
-  // Buffering spinner
-  audio.addEventListener("waiting", () => {
-    playIcon.classList.add("hidden");
-    playSpinner.classList.remove("hidden");
-  });
+    // Buffering spinner
+    audio.addEventListener("waiting", () => {
+      playIcon.classList.add("hidden");
+      playSpinner.classList.remove("hidden");
+    });
 
-  audio.addEventListener("playing", () => {
-    playIcon.classList.remove("hidden");
-    playSpinner.classList.add("hidden");
-  });
+    audio.addEventListener("playing", () => {
+      playIcon.classList.remove("hidden");
+      playSpinner.classList.add("hidden");
+    });
   });
 </script>
