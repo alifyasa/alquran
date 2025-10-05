@@ -6,6 +6,7 @@ import Ayah from "../components/Ayah.astro";
 import SurahName from "../components/SurahName.astro";
 import AyahTranslation from "../components/AyahTranslation.astro";
 import Bismillah from "../components/Bismillah.astro";
+import Recitation from "../components/Recitation.astro";
 
 export const prerender = true;
 export async function getStaticPaths() {
@@ -64,6 +65,7 @@ const surahName = ayahs[0]?.sura_name_en || "";
       ))
     }
   </div>
+  <Recitation reciter="sa3ood_al-shuraym" surahNumber={surahNumber} />
   <FloatingControls />
   <script>
     // Keyboard navigation for ayahs

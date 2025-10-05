@@ -1,0 +1,214 @@
+---
+export interface Props {
+  reciter: string;
+  surahNumber: number;
+}
+
+const { reciter, surahNumber } = Astro.props;
+---
+
+<div
+  id="recitation-bar"
+  data-reciter={reciter}
+  data-surah-number={surahNumber}
+  class="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-center gap-4 border-t border-neutral-300 bg-white p-4 dark:border-neutral-600 dark:bg-black"
+>
+  <audio id="recitation-audio" preload="none"></audio>
+
+  <button
+    id="play-pause-btn"
+    class="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+    aria-label="Play/Pause"
+  >
+    <span id="play-icon">▶️</span>
+  </button>
+
+  <div class="max-w-md flex-1">
+    <input
+      id="progress-bar"
+      type="range"
+      min="0"
+      max="100"
+      value="0"
+      class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-neutral-200 dark:bg-neutral-700"
+    />
+    <div
+      class="mt-1 flex justify-between text-sm text-neutral-600 dark:text-neutral-400"
+    >
+      <span id="current-time">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button
+      id="skip-back"
+      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip back 10s">⏪</button
+    >
+    <button
+      id="skip-forward"
+      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip forward 10s">⏩</button
+    >
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button
+      id="mute-btn"
+      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Mute/Unmute">🔊</button
+    >
+    <input
+      id="volume-slider"
+      type="range"
+      min="0"
+      max="1"
+      step="0.1"
+      value="1"
+      class="h-2 w-20 cursor-pointer appearance-none rounded-lg bg-neutral-200 dark:bg-neutral-700"
+    />
+  </div>
+
+  <div
+    id="loading-indicator"
+    class="hidden text-sm text-neutral-600 dark:text-neutral-400"
+  >
+    Loading...
+  </div>
+  <div id="error-message" class="hidden text-sm text-red-600 dark:text-red-400">
+    Audio failed to load
+  </div>
+</div>
+
+<script>
+  const audio = document.getElementById("recitation-audio") as HTMLAudioElement;
+  const playPauseBtn = document.getElementById(
+    "play-pause-btn",
+  ) as HTMLButtonElement;
+  const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
+  const progressBar = document.getElementById(
+    "progress-bar",
+  ) as HTMLInputElement;
+  const currentTimeEl = document.getElementById(
+    "current-time",
+  ) as HTMLSpanElement;
+  const durationEl = document.getElementById("duration") as HTMLSpanElement;
+  const skipBackBtn = document.getElementById("skip-back") as HTMLButtonElement;
+  const skipForwardBtn = document.getElementById(
+    "skip-forward",
+  ) as HTMLButtonElement;
+  const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
+  const volumeSlider = document.getElementById(
+    "volume-slider",
+  ) as HTMLInputElement;
+  const loadingIndicator = document.getElementById(
+    "loading-indicator",
+  ) as HTMLDivElement;
+  const errorMessage = document.getElementById(
+    "error-message",
+  ) as HTMLDivElement;
+
+  // Read props from data attributes
+  const recitationBar = document.getElementById('recitation-bar');
+  const reciter = recitationBar.dataset.reciter;
+  const surahNumber = parseInt(recitationBar.dataset.surahNumber);
+
+  // Set audio source
+  audio.src = `https://download.quranicaudio.com/quran/${reciter}/${surahNumber.toString().padStart(3, '0')}.mp3`;
+
+  // Load saved volume
+  const savedVolume = localStorage.getItem("recitation-volume") || "1";
+  audio.volume = parseFloat(savedVolume);
+  volumeSlider.value = savedVolume;
+
+  // Update mute button
+  const updateMuteIcon = () => {
+    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+  };
+  updateMuteIcon();
+
+  // Format time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  // Update progress
+  const updateProgress = () => {
+    if (audio.duration) {
+      progressBar.value = (
+        (audio.currentTime / audio.duration) *
+        100
+      ).toString();
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationEl.textContent = formatTime(audio.duration);
+    }
+  };
+
+  // Play/Pause
+  playPauseBtn.addEventListener("click", () => {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener("play", () => {
+    playIcon.textContent = "⏸️";
+  });
+
+  audio.addEventListener("pause", () => {
+    playIcon.textContent = "▶️";
+  });
+
+  // Progress bar
+  progressBar.addEventListener("input", () => {
+    const seekTime = (parseFloat(progressBar.value) / 100) * audio.duration;
+    audio.currentTime = seekTime;
+  });
+
+  audio.addEventListener("timeupdate", updateProgress);
+  audio.addEventListener("loadedmetadata", updateProgress);
+
+  // Skip controls
+  skipBackBtn.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+  });
+
+  skipForwardBtn.addEventListener("click", () => {
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+  });
+
+  // Volume
+  volumeSlider.addEventListener("input", () => {
+    audio.volume = parseFloat(volumeSlider.value);
+    localStorage.setItem("recitation-volume", volumeSlider.value);
+    audio.muted = false;
+    updateMuteIcon();
+  });
+
+  muteBtn.addEventListener("click", () => {
+    audio.muted = !audio.muted;
+    updateMuteIcon();
+  });
+
+  // Loading
+  audio.addEventListener("loadstart", () => {
+    loadingIndicator.classList.remove("hidden");
+    errorMessage.classList.add("hidden");
+  });
+
+  audio.addEventListener("canplay", () => {
+    loadingIndicator.classList.add("hidden");
+  });
+
+  // Error
+  audio.addEventListener("error", () => {
+    loadingIndicator.classList.add("hidden");
+    errorMessage.classList.remove("hidden");
+    playPauseBtn.disabled = true;
+  });
+</script>
