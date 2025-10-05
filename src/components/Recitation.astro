@@ -13,15 +13,18 @@ const { reciter, surahNumber } = Astro.props;
   data-surah-number={surahNumber}
   class="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-center gap-4 border-t border-neutral-300 bg-white p-4 dark:border-neutral-600 dark:bg-black"
 >
-  <audio id="recitation-audio" preload="none"></audio>
+   <audio id="recitation-audio" preload="metadata"></audio>
 
-  <button
-    id="play-pause-btn"
-    class="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
-    aria-label="Play/Pause"
-  >
-    <span id="play-icon">▶</span>
-  </button>
+   <button
+     id="play-pause-btn"
+     class="relative flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+     aria-label="Play/Pause"
+   >
+     <span id="play-icon" class="relative z-10">▶</span>
+     <svg id="play-spinner" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4 text-white dark:text-black hidden" viewBox="0 0 24 24">
+       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+     </svg>
+   </button>
 
   <div class="max-w-md flex-1">
     <input
@@ -56,7 +59,7 @@ const { reciter, surahNumber } = Astro.props;
   <div class="flex items-center gap-2">
     <button
       id="mute-btn"
-      class="flex h-8 px-2 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      class="flex h-8 items-center justify-center rounded bg-neutral-200 px-2 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
       aria-label="Mute/Unmute">Unmute</button
     >
     <input
@@ -82,133 +85,151 @@ const { reciter, surahNumber } = Astro.props;
 </div>
 
 <script>
-  const audio = document.getElementById("recitation-audio") as HTMLAudioElement;
-  const playPauseBtn = document.getElementById(
-    "play-pause-btn",
-  ) as HTMLButtonElement;
-  const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
-  const progressBar = document.getElementById(
-    "progress-bar",
-  ) as HTMLInputElement;
-  const currentTimeEl = document.getElementById(
-    "current-time",
-  ) as HTMLSpanElement;
-  const durationEl = document.getElementById("duration") as HTMLSpanElement;
-  const skipBackBtn = document.getElementById("skip-back") as HTMLButtonElement;
-  const skipForwardBtn = document.getElementById(
-    "skip-forward",
-  ) as HTMLButtonElement;
-  const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
-  const volumeSlider = document.getElementById(
-    "volume-slider",
-  ) as HTMLInputElement;
-  const loadingIndicator = document.getElementById(
-    "loading-indicator",
-  ) as HTMLDivElement;
+  document.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById(
+      "recitation-audio",
+    ) as HTMLAudioElement;
+    const playPauseBtn = document.getElementById(
+      "play-pause-btn",
+    ) as HTMLButtonElement;
+    const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
+    const progressBar = document.getElementById(
+      "progress-bar",
+    ) as HTMLInputElement;
+    const currentTimeEl = document.getElementById(
+      "current-time",
+    ) as HTMLSpanElement;
+    const durationEl = document.getElementById("duration") as HTMLSpanElement;
+    const skipBackBtn = document.getElementById(
+      "skip-back",
+    ) as HTMLButtonElement;
+    const skipForwardBtn = document.getElementById(
+      "skip-forward",
+    ) as HTMLButtonElement;
+    const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
+    const volumeSlider = document.getElementById(
+      "volume-slider",
+    ) as HTMLInputElement;
+    const loadingIndicator = document.getElementById(
+      "loading-indicator",
+    ) as HTMLDivElement;
   const errorMessage = document.getElementById(
     "error-message",
   ) as HTMLDivElement;
+  const playSpinner = document.getElementById('play-spinner') as SVGSVGElement;
 
   // Read props from data attributes
-  const recitationBar = document.getElementById('recitation-bar');
-  const reciter = recitationBar.dataset.reciter;
-  const surahNumber = parseInt(recitationBar.dataset.surahNumber);
+    const recitationBar = document.getElementById("recitation-bar");
+    const reciter = recitationBar.dataset.reciter;
+    const surahNumber = parseInt(recitationBar.dataset.surahNumber);
 
-  // Set audio source
-  audio.src = `https://download.quranicaudio.com/quran/${reciter}/${surahNumber.toString().padStart(3, '0')}.mp3`;
+    // Set audio source
+    audio.src = `https://download.quranicaudio.com/quran/${reciter}/${surahNumber.toString().padStart(3, "0")}.mp3`;
 
-  // Load saved volume
-  const savedVolume = localStorage.getItem("recitation-volume") || "1";
-  audio.volume = parseFloat(savedVolume);
-  volumeSlider.value = savedVolume;
+    // Load saved volume
+    const savedVolume = localStorage.getItem("recitation-volume") || "1";
+    audio.volume = parseFloat(savedVolume);
+    volumeSlider.value = savedVolume;
 
-  // Update mute button
-  const updateMuteIcon = () => {
-    muteBtn.textContent = audio.muted ? "Mute" : "Unmute";
-  };
-  updateMuteIcon();
-
-  // Format time
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  // Update progress
-  const updateProgress = () => {
-    if (audio.duration) {
-      progressBar.value = (
-        (audio.currentTime / audio.duration) *
-        100
-      ).toString();
-      currentTimeEl.textContent = formatTime(audio.currentTime);
-      durationEl.textContent = formatTime(audio.duration);
-    }
-  };
-
-  // Play/Pause
-  playPauseBtn.addEventListener("click", () => {
-    if (audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
-  });
-
-  audio.addEventListener("play", () => {
-    playIcon.textContent = "⏸";
-  });
-
-  audio.addEventListener("pause", () => {
-    playIcon.textContent = "▶";
-  });
-
-  // Progress bar
-  progressBar.addEventListener("input", () => {
-    const seekTime = (parseFloat(progressBar.value) / 100) * audio.duration;
-    audio.currentTime = seekTime;
-  });
-
-  audio.addEventListener("timeupdate", updateProgress);
-  audio.addEventListener("loadedmetadata", updateProgress);
-
-  // Skip controls
-  skipBackBtn.addEventListener("click", () => {
-    audio.currentTime = Math.max(0, audio.currentTime - 10);
-  });
-
-  skipForwardBtn.addEventListener("click", () => {
-    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-  });
-
-  // Volume
-  volumeSlider.addEventListener("input", () => {
-    audio.volume = parseFloat(volumeSlider.value);
-    localStorage.setItem("recitation-volume", volumeSlider.value);
-    audio.muted = false;
+    // Update mute button
+    const updateMuteIcon = () => {
+      muteBtn.textContent = audio.muted ? "Mute" : "Unmute";
+    };
     updateMuteIcon();
-  });
 
-  muteBtn.addEventListener("click", () => {
-    audio.muted = !audio.muted;
-    updateMuteIcon();
-  });
+    // Format time
+    const formatTime = (seconds: number) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
 
-  // Loading
-  audio.addEventListener("loadstart", () => {
-    loadingIndicator.classList.remove("hidden");
-    errorMessage.classList.add("hidden");
-  });
+    // Update progress
+    const updateProgress = () => {
+      if (audio.duration) {
+        progressBar.value = (
+          (audio.currentTime / audio.duration) *
+          100
+        ).toString();
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        durationEl.textContent = formatTime(audio.duration);
+      }
+    };
 
-  audio.addEventListener("canplay", () => {
-    loadingIndicator.classList.add("hidden");
-  });
+    // Play/Pause
+    playPauseBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener("play", () => {
+      playIcon.textContent = "⏸";
+    });
+
+    audio.addEventListener("pause", () => {
+      playIcon.textContent = "▶";
+    });
+
+    // Progress bar
+    progressBar.addEventListener("input", () => {
+      const seekTime = (parseFloat(progressBar.value) / 100) * audio.duration;
+      audio.currentTime = seekTime;
+    });
+
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("loadedmetadata", updateProgress);
+
+    // Skip controls
+    skipBackBtn.addEventListener("click", () => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+
+    skipForwardBtn.addEventListener("click", () => {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    });
+
+    // Volume
+    volumeSlider.addEventListener("input", () => {
+      audio.volume = parseFloat(volumeSlider.value);
+      localStorage.setItem("recitation-volume", volumeSlider.value);
+      audio.muted = false;
+      updateMuteIcon();
+    });
+
+    muteBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      updateMuteIcon();
+    });
+
+    // Loading
+    audio.addEventListener("loadstart", () => {
+      loadingIndicator.classList.remove("hidden");
+      errorMessage.classList.add("hidden");
+    });
+
+    audio.addEventListener("canplay", () => {
+      loadingIndicator.classList.add("hidden");
+    });
 
   // Error
   audio.addEventListener("error", () => {
     loadingIndicator.classList.add("hidden");
     errorMessage.classList.remove("hidden");
     playPauseBtn.disabled = true;
+  });
+
+  // Buffering spinner
+  audio.addEventListener("waiting", () => {
+    playIcon.classList.add("hidden");
+    playSpinner.classList.remove("hidden");
+  });
+
+  audio.addEventListener("playing", () => {
+    playIcon.classList.remove("hidden");
+    playSpinner.classList.add("hidden");
+  });
   });
 </script>
