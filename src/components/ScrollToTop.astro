@@ -1,0 +1,18 @@
+---
+
+---
+
+<button
+  id="scroll-to-top"
+  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+  >↑</button
+>
+
+<script>
+  const scrollToTopBtn = document.getElementById("scroll-to-top");
+
+  // Scroll to top functionality
+  scrollToTopBtn?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>

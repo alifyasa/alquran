@@ -1,0 +1,36 @@
+---
+
+---
+
+<button
+  id="theme-toggle"
+  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+  aria-label="Toggle theme"
+>
+  <span class="theme-icon">☀</span>
+</button>
+
+<script>
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeIcon = themeToggle?.querySelector(".theme-icon");
+
+  // Theme toggle functionality
+  const currentTheme = localStorage.getItem("theme") || "light";
+
+  if (currentTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    if (themeIcon) themeIcon.textContent = "☾";
+  }
+
+  themeToggle?.addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark");
+
+    if (document.documentElement.classList.contains("dark")) {
+      localStorage.setItem("theme", "dark");
+      if (themeIcon) themeIcon.textContent = "☾";
+    } else {
+      localStorage.setItem("theme", "light");
+      if (themeIcon) themeIcon.textContent = "☀";
+    }
+  });
+</script>
