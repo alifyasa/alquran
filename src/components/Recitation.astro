@@ -108,12 +108,7 @@ const { reciter, surahNumber } = Astro.props;
     const volumeSlider = document.getElementById(
       "volume-slider",
     ) as HTMLInputElement;
-    const loadingIndicator = document.getElementById(
-      "loading-indicator",
-    ) as HTMLDivElement;
-    const errorMessage = document.getElementById(
-      "error-message",
-    ) as HTMLDivElement;
+
     const playSpinner = document.getElementById(
       "play-spinner",
     ) as SVGSVGElement;
@@ -218,20 +213,8 @@ const { reciter, surahNumber } = Astro.props;
       updateMuteIcon();
     });
 
-    // Loading
-    audio.addEventListener("loadstart", () => {
-      loadingIndicator.classList.remove("hidden");
-      errorMessage.classList.add("hidden");
-    });
-
-    audio.addEventListener("canplay", () => {
-      loadingIndicator.classList.add("hidden");
-    });
-
     // Error
     audio.addEventListener("error", () => {
-      loadingIndicator.classList.add("hidden");
-      errorMessage.classList.remove("hidden");
       playPauseBtn.disabled = true;
     });
 
