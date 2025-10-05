@@ -7,7 +7,7 @@
   class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
   aria-label="Toggle theme"
 >
-  <span class="theme-icon">☀</span>
+   <span class="theme-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-760v-160h80v160h-80Zm266 110-55-55 112-115 56 57-113 113Zm54 210v-80h160v80H760ZM440-40v-160h80v160h-80ZM254-652 140-763l57-56 113 113-56 54Zm508 512L651-255l54-54 114 110-57 59ZM40-440v-80h160v80H40Zm157 300-56-57 112-112 29 27 29 28-114 114Zm283-100q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Z"/></svg></span>
 </button>
 
 <script>
@@ -19,7 +19,7 @@
 
   if (currentTheme === "dark") {
     document.documentElement.classList.add("dark");
-    if (themeIcon) themeIcon.textContent = "☾";
+      if (themeIcon) themeIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-80q-82 0-155-31.5t-127.5-86Q223-252 191.5-325T160-480q0-83 31.5-155.5t86-127Q332-817 405-848.5T560-880q54 0 105 14t95 40q-91 53-145.5 143.5T560-480q0 112 54.5 202.5T760-134q-44 26-95 40T560-80Z"/></svg>';
   }
 
   themeToggle?.addEventListener("click", () => {
@@ -27,10 +27,10 @@
 
     if (document.documentElement.classList.contains("dark")) {
       localStorage.setItem("theme", "dark");
-      if (themeIcon) themeIcon.textContent = "☾";
+    if (themeIcon) themeIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-80q-82 0-155-31.5t-127.5-86Q223-252 191.5-325T160-480q0-83 31.5-155.5t86-127Q332-817 405-848.5T560-880q54 0 105 14t95 40q-91 53-145.5 143.5T560-480q0 112 54.5 202.5T760-134q-44 26-95 40T560-80Z"/></svg>';
     } else {
       localStorage.setItem("theme", "light");
-      if (themeIcon) themeIcon.textContent = "☀";
+      if (themeIcon) themeIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M440-760v-160h80v160h-80Zm266 110-55-55 112-115 56 57-113 113Zm54 210v-80h160v80H760ZM440-40v-160h80v160h-80ZM254-652 140-763l57-56 113 113-56 54Zm508 512L651-255l54-54 114 110-57 59ZM40-440v-80h160v80H40Zm157 300-56-57 112-112 29 27 29 28-114 114Zm283-100q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Z"/></svg>';
     }
   });
 </script>

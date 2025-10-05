@@ -20,7 +20,7 @@ const { reciter, surahNumber } = Astro.props;
      class="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
     aria-label="Play/Pause"
   >
-    <span id="play-icon" class="relative z-10">▶</span>
+    <span id="play-icon" class="relative z-10"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M320-200v-560l440 280-440 280Z"/></svg></span>
     <svg
       id="play-spinner"
       class="absolute top-1/2 left-1/2 hidden h-4 w-4 md:h-5 md:w-5 -translate-x-1/2 -translate-y-1/2 transform animate-spin text-white dark:text-black"
@@ -55,12 +55,12 @@ const { reciter, surahNumber } = Astro.props;
     <button
       id="skip-back"
       class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip back 10s">◀◀</button
+      aria-label="Skip back 10s"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M860-240 500-480l360-240v480Zm-400 0L100-480l360-240v480Z"/></svg></button
     >
     <button
       id="skip-forward"
       class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip forward 10s">▶▶</button
+      aria-label="Skip forward 10s"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M100-240v-480l360 240-360 240Zm400 0v-480l360 240-360 240Z"/></svg></button
     >
   </div>
 
@@ -68,7 +68,7 @@ const { reciter, surahNumber } = Astro.props;
     <button
       id="mute-btn"
       class="flex h-9 md:h-10 w-16 md:w-20 items-center justify-center rounded bg-neutral-200 px-2 md:px-3 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Mute/Unmute">Mute</button
+      aria-label="Mute/Unmute"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg></button
     >
     <input
       id="volume-slider"
@@ -133,7 +133,7 @@ const { reciter, surahNumber } = Astro.props;
 
   // Update mute button
   const updateMuteIcon = () => {
-    muteBtn.textContent = audio.muted ? "Unmute" : "Mute";
+    muteBtn.innerHTML = audio.muted ? '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Z"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320Z"/></svg>';
   };
     updateMuteIcon();
 
@@ -166,11 +166,11 @@ const { reciter, surahNumber } = Astro.props;
     });
 
     audio.addEventListener("play", () => {
-      playIcon.textContent = "⏸";
+      playIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-200v-560h160v560H560Zm-320 0v-560h160v560H240Z"/></svg>';
     });
 
     audio.addEventListener("pause", () => {
-      playIcon.textContent = "▶";
+      playIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M320-200v-560l440 280-440 280Z"/></svg>';
     });
 
     // Progress bar
