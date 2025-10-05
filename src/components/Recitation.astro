@@ -20,7 +20,7 @@ const { reciter, surahNumber } = Astro.props;
     class="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
     aria-label="Play/Pause"
   >
-    <span id="play-icon">▶️</span>
+    <span id="play-icon">▶</span>
   </button>
 
   <div class="max-w-md flex-1">
@@ -43,21 +43,21 @@ const { reciter, surahNumber } = Astro.props;
   <div class="flex items-center gap-2">
     <button
       id="skip-back"
-      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip back 10s">⏪</button
+      class="flex h-8 w-10 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip back 10s">◀◀</button
     >
     <button
       id="skip-forward"
-      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Skip forward 10s">⏩</button
+      class="flex h-8 w-10 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Skip forward 10s">▶▶</button
     >
   </div>
 
   <div class="flex items-center gap-2">
     <button
       id="mute-btn"
-      class="flex h-8 w-8 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Mute/Unmute">🔊</button
+      class="flex h-8 px-2 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Mute/Unmute">Unmute</button
     >
     <input
       id="volume-slider"
@@ -124,7 +124,7 @@ const { reciter, surahNumber } = Astro.props;
 
   // Update mute button
   const updateMuteIcon = () => {
-    muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    muteBtn.textContent = audio.muted ? "Mute" : "Unmute";
   };
   updateMuteIcon();
 
@@ -157,11 +157,11 @@ const { reciter, surahNumber } = Astro.props;
   });
 
   audio.addEventListener("play", () => {
-    playIcon.textContent = "⏸️";
+    playIcon.textContent = "⏸";
   });
 
   audio.addEventListener("pause", () => {
-    playIcon.textContent = "▶️";
+    playIcon.textContent = "▶";
   });
 
   // Progress bar
