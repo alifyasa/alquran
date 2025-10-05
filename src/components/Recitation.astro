@@ -11,19 +11,19 @@ const { reciter, surahNumber } = Astro.props;
   id="recitation-bar"
   data-reciter={reciter}
   data-surah-number={surahNumber}
-  class="fixed right-0 bottom-0 left-0 z-40 flex items-center justify-center gap-4 border-t border-neutral-300 bg-white p-4 dark:border-neutral-600 dark:bg-black"
+  class="fixed right-0 bottom-0 left-0 z-40 flex flex-wrap items-center justify-center gap-2 md:gap-4 border-t border-neutral-300 bg-white p-4 dark:border-neutral-600 dark:bg-black"
 >
   <audio id="recitation-audio" preload="metadata"></audio>
 
   <button
     id="play-pause-btn"
-    class="relative flex h-10 w-10 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+     class="relative flex h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
     aria-label="Play/Pause"
   >
     <span id="play-icon" class="relative z-10">▶</span>
     <svg
       id="play-spinner"
-      class="absolute top-1/2 left-1/2 hidden h-4 w-4 -translate-x-1/2 -translate-y-1/2 transform animate-spin text-white dark:text-black"
+      class="absolute top-1/2 left-1/2 hidden h-4 w-4 md:h-5 md:w-5 -translate-x-1/2 -translate-y-1/2 transform animate-spin text-white dark:text-black"
       viewBox="0 0 24 24"
     >
       <path
@@ -54,21 +54,21 @@ const { reciter, surahNumber } = Astro.props;
   <div class="flex items-center gap-2">
     <button
       id="skip-back"
-      class="flex h-8 w-10 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
       aria-label="Skip back 10s">◀◀</button
     >
     <button
       id="skip-forward"
-      class="flex h-8 w-10 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      class="flex h-9 w-10 md:h-10 md:w-12 items-center justify-center rounded bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
       aria-label="Skip forward 10s">▶▶</button
     >
   </div>
 
-  <div class="flex items-center gap-2">
+  <div class="hidden md:flex items-center gap-2">
     <button
       id="mute-btn"
-      class="flex h-8 items-center justify-center rounded bg-neutral-200 px-2 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
-      aria-label="Mute/Unmute">Unmute</button
+      class="flex h-9 md:h-10 w-16 md:w-20 items-center justify-center rounded bg-neutral-200 px-2 md:px-3 hover:bg-neutral-300 dark:bg-neutral-700 dark:hover:bg-neutral-600"
+      aria-label="Mute/Unmute">Mute</button
     >
     <input
       id="volume-slider"
@@ -131,10 +131,10 @@ const { reciter, surahNumber } = Astro.props;
     audio.volume = parseFloat(savedVolume);
     volumeSlider.value = savedVolume;
 
-    // Update mute button
-    const updateMuteIcon = () => {
-      muteBtn.textContent = audio.muted ? "Mute" : "Unmute";
-    };
+  // Update mute button
+  const updateMuteIcon = () => {
+    muteBtn.textContent = audio.muted ? "Unmute" : "Mute";
+  };
     updateMuteIcon();
 
     // Format time
