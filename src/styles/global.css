@@ -15,14 +15,18 @@
 
 @font-face {
   font-family: "Uthmanic Hafs";
-  src: url("/fonts/uthmanic_hafs_v20.ttf") format("truetype");
+  src:
+    url("/fonts/uthmanic_hafs_v20.woff2") format("woff2"),
+    url("/fonts/uthmanic_hafs_v20.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "QCF2BSML";
-  src: url("/fonts/QCF2BSML.ttf") format("truetype");
+  src:
+    url("/fonts/QCF2BSML-subset.woff2") format("woff2"),
+    url("/fonts/QCF2BSML-subset.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
