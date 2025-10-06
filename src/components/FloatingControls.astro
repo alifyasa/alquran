@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
+import Settings from "./Settings.astro";
 import ScrollToTop from "./ScrollToTop.astro";
 
 const { classOverride = "bottom-24" } = Astro.props;
@@ -7,5 +8,6 @@ const { classOverride = "bottom-24" } = Astro.props;
 
 <div class:list={["fixed right-4 z-50 flex flex-col gap-2", classOverride]}>
   <ThemeToggle />
+  <Settings />
   <ScrollToTop />
 </div>

@@ -1,0 +1,73 @@
+---
+import SettingsIcon from "../icons/google-icons/settings.svg";
+---
+
+<button
+  id="settings-btn"
+  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-none bg-black text-base text-white shadow-lg transition-colors duration-300 hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+  aria-label="Settings"
+>
+  <SettingsIcon />
+</button>
+
+<dialog
+  id="settings-modal"
+  class="fixed inset-0 z-50 m-auto h-fit w-fit rounded-lg bg-white p-6 shadow-lg dark:bg-neutral-800"
+>
+  <h2 class="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Settings</h2>
+  <div class="mb-4">
+    <label for="reciter-select" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Reciter</label>
+    <select
+      id="reciter-select"
+      class="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-neutral-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-100"
+    >
+      <option value="sa3ood_al-shuraym">Sa`ud ash-Shuraym</option>
+      <option value="mahmood_khaleel_al-husaree_iza3a">Mahmoud Khaleel Al-Husary</option>
+      <option value="mishaari_raashid_al_3afaasee">Mishari Rashid al-`Afasy</option>
+    </select>
+  </div>
+  <div class="flex justify-end">
+    <button
+      id="close-settings"
+      class="rounded-md bg-neutral-200 px-4 py-2 text-neutral-900 hover:bg-neutral-300 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
+    >
+      Close
+    </button>
+  </div>
+</dialog>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const settingsBtn = document.getElementById("settings-btn") as HTMLButtonElement;
+    const modal = document.getElementById("settings-modal") as HTMLDialogElement;
+    const closeBtn = document.getElementById("close-settings") as HTMLButtonElement;
+    const reciterSelect = document.getElementById("reciter-select") as HTMLSelectElement;
+
+    // Load saved reciter
+    const savedReciter = localStorage.getItem("recitation-reciter") || "sa3ood_al-shuraym";
+    reciterSelect.value = savedReciter;
+
+    // Open modal
+    settingsBtn.addEventListener("click", () => {
+      modal.showModal();
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => {
+      modal.close();
+    });
+
+    // Close on outside click
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.close();
+      }
+    });
+
+    // Save on change
+    reciterSelect.addEventListener("change", () => {
+      localStorage.setItem("recitation-reciter", reciterSelect.value);
+      window.dispatchEvent(new CustomEvent('reciterChanged', { detail: reciterSelect.value }));
+    });
+  });
+</script>

@@ -101,42 +101,24 @@ import RepeatOne from "../icons/google-icons/repeat-one.svg";
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById(
-      "recitation-audio",
-    ) as HTMLAudioElement;
-    const playPauseBtn = document.getElementById(
-      "play-pause-btn",
-    ) as HTMLButtonElement;
-    const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
-    const progressBar = document.getElementById(
-      "progress-bar",
-    ) as HTMLInputElement;
-    const currentTimeEl = document.getElementById(
-      "current-time",
-    ) as HTMLSpanElement;
-    const durationEl = document.getElementById("duration") as HTMLSpanElement;
-    const skipBackBtn = document.getElementById(
-      "skip-back",
-    ) as HTMLButtonElement;
-    const skipForwardBtn = document.getElementById(
-      "skip-forward",
-    ) as HTMLButtonElement;
-    const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
-    const volumeSlider = document.getElementById(
-      "volume-slider",
-    ) as HTMLInputElement;
-    const loopBtn = document.getElementById("loop-btn") as HTMLButtonElement;
+  import { AudioPlayer } from "../utils/audioPlayer";
 
-    let isLooping = false;
+  document.addEventListener("DOMContentLoaded", () => {
+    const audio = document.getElementById("recitation-audio") as HTMLAudioElement;
+    const playPauseBtn = document.getElementById("play-pause-btn") as HTMLButtonElement;
+    const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
+    const progressBar = document.getElementById("progress-bar") as HTMLInputElement;
+    const currentTimeEl = document.getElementById("current-time") as HTMLSpanElement;
+    const durationEl = document.getElementById("duration") as HTMLSpanElement;
+    const skipBackBtn = document.getElementById("skip-back") as HTMLButtonElement;
+    const skipForwardBtn = document.getElementById("skip-forward") as HTMLButtonElement;
+    const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
+    const volumeSlider = document.getElementById("volume-slider") as HTMLInputElement;
+    const loopBtn = document.getElementById("loop-btn") as HTMLButtonElement;
 
     const repeatIcon = loopBtn.querySelector(".repeat-icon");
     const repeatOneIcon = loopBtn.querySelector(".repeat-one-icon");
-
-    const playSpinner = document.getElementById(
-      "play-spinner",
-    ) as unknown as SVGSVGElement;
-
+    const playSpinner = document.getElementById("play-spinner") as unknown as SVGSVGElement;
     const playArrow = playIcon.querySelector(".play-arrow");
     const pauseIcon = playIcon.querySelector(".pause-icon");
     const volumeUp = muteBtn?.querySelector(".volume-up");
@@ -144,161 +126,37 @@ import RepeatOne from "../icons/google-icons/repeat-one.svg";
 
     // Read props from data attributes
     const recitationBar = document.getElementById("recitation-bar");
-    const reciter = recitationBar!.dataset.reciter!;
+    const defaultReciter = recitationBar!.dataset.reciter!;
     const surahNumber = parseInt(recitationBar!.dataset.surahNumber!);
 
-    // Set audio source
-    audio.src = `https://download.quranicaudio.com/quran/${reciter}/${surahNumber.toString().padStart(3, "0")}.mp3`;
+    // Get selected reciter from localStorage, fallback to default
+    const reciter = localStorage.getItem("recitation-reciter") || defaultReciter;
 
-    // Load saved volume
-    const savedVolume = localStorage.getItem("recitation-volume") || "1";
-    audio.volume = parseFloat(savedVolume);
-    volumeSlider.value = savedVolume;
-    let lastVolume = parseFloat(savedVolume);
+    const player = new AudioPlayer(
+      {
+        audio,
+        playPauseBtn,
+        playIcon,
+        progressBar,
+        currentTimeEl,
+        durationEl,
+        skipBackBtn,
+        skipForwardBtn,
+        muteBtn,
+        volumeSlider,
+        loopBtn,
+        repeatIcon,
+        repeatOneIcon,
+        playSpinner,
+        playArrow,
+        pauseIcon,
+        volumeUp,
+        volumeOff,
+      },
+      reciter,
+      surahNumber
+    );
 
-    // Update mute button
-    const updateMuteIcon = () => {
-      if (audio.muted) {
-        volumeUp?.classList.add("hidden");
-        volumeOff?.classList.remove("hidden");
-      } else {
-        volumeUp?.classList.remove("hidden");
-        volumeOff?.classList.add("hidden");
-      }
-    };
-    updateMuteIcon();
-
-    // Format time
-    const formatTime = (seconds: number) => {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs.toString().padStart(2, "0")}`;
-    };
-
-    // Update progress
-    const updateProgress = () => {
-      if (audio.duration) {
-        progressBar.value = (
-          (audio.currentTime / audio.duration) *
-          100
-        ).toString();
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-        durationEl.textContent = formatTime(audio.duration);
-      }
-    };
-
-    // Play/Pause
-    playPauseBtn.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    });
-
-    audio.addEventListener("play", () => {
-      playArrow?.classList.add("hidden");
-      pauseIcon?.classList.remove("hidden");
-    });
-
-    audio.addEventListener("pause", () => {
-      playArrow?.classList.remove("hidden");
-      pauseIcon?.classList.add("hidden");
-    });
-
-    // Progress bar
-    progressBar.addEventListener("input", () => {
-      const seekTime = (parseFloat(progressBar.value) / 100) * audio.duration;
-      audio.currentTime = seekTime;
-    });
-
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("loadedmetadata", updateProgress);
-
-    // Skip controls
-    skipBackBtn.addEventListener("click", () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10);
-    });
-
-    skipForwardBtn.addEventListener("click", () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-    });
-
-    // Volume
-    volumeSlider.addEventListener("input", () => {
-      if (audio.muted) {
-        audio.muted = false;
-        updateMuteIcon();
-      }
-      audio.volume = parseFloat(volumeSlider.value);
-      lastVolume = audio.volume;
-      localStorage.setItem("recitation-volume", volumeSlider.value);
-    });
-
-    volumeSlider.addEventListener("wheel", (event) => {
-      event.preventDefault();
-      const delta = event.deltaY > 0 ? -0.1 : 0.1;
-      let newVolume = parseFloat(volumeSlider.value) + delta;
-      newVolume = Math.max(0, Math.min(1, newVolume));
-      volumeSlider.value = newVolume.toString();
-      audio.volume = newVolume;
-      lastVolume = newVolume;
-      localStorage.setItem("recitation-volume", newVolume.toString());
-      if (audio.muted) {
-        audio.muted = false;
-        updateMuteIcon();
-      }
-    });
-
-    muteBtn.addEventListener("click", () => {
-      if (audio.muted) {
-        // Unmuting: restore previous volume
-        audio.volume = lastVolume;
-        volumeSlider.value = lastVolume.toString();
-      } else {
-        // Muting: store current volume and set to 0
-        lastVolume = audio.volume;
-        audio.volume = 0;
-        volumeSlider.value = "0";
-      }
-      audio.muted = !audio.muted;
-      updateMuteIcon();
-    });
-
-    // Loop toggle
-    loopBtn.addEventListener("click", () => {
-      isLooping = !isLooping;
-      if (isLooping) {
-        repeatIcon?.classList.add("hidden");
-        repeatOneIcon?.classList.remove("hidden");
-      } else {
-        repeatIcon?.classList.remove("hidden");
-        repeatOneIcon?.classList.add("hidden");
-      }
-    });
-
-    // Error
-    audio.addEventListener("error", () => {
-      playPauseBtn.disabled = true;
-    });
-
-    // Buffering spinner
-    audio.addEventListener("waiting", () => {
-      playIcon.classList.add("hidden");
-      playSpinner.classList.remove("hidden");
-    });
-
-    audio.addEventListener("playing", () => {
-      playIcon.classList.remove("hidden");
-      playSpinner.classList.add("hidden");
-    });
-
-    // Loop functionality
-    audio.addEventListener("ended", () => {
-      if (isLooping) {
-        audio.currentTime = 0;
-        audio.play();
-      }
-    });
+    window.addEventListener('reciterChanged', (e: any) => player.changeReciter(e.detail));
   });
 </script>
