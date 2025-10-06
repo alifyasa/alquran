@@ -66,7 +66,7 @@ const surahName = ayahs[0]?.sura_name_en || "";
     }
   </div>
   <Recitation reciter="sa3ood_al-shuraym" surahNumber={surahNumber} />
-  <FloatingControls />
+  <FloatingControls classOverride="bottom-24" />
   <script>
     // Keyboard navigation for ayahs
     const ayahElements = Array.from(document.querySelectorAll("[id]")).filter(
