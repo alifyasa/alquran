@@ -104,21 +104,37 @@ import RepeatOne from "../icons/google-icons/repeat-one.svg";
   import { AudioPlayer } from "../utils/audioPlayer";
 
   document.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById("recitation-audio") as HTMLAudioElement;
-    const playPauseBtn = document.getElementById("play-pause-btn") as HTMLButtonElement;
+    const audio = document.getElementById(
+      "recitation-audio",
+    ) as HTMLAudioElement;
+    const playPauseBtn = document.getElementById(
+      "play-pause-btn",
+    ) as HTMLButtonElement;
     const playIcon = document.getElementById("play-icon") as HTMLSpanElement;
-    const progressBar = document.getElementById("progress-bar") as HTMLInputElement;
-    const currentTimeEl = document.getElementById("current-time") as HTMLSpanElement;
+    const progressBar = document.getElementById(
+      "progress-bar",
+    ) as HTMLInputElement;
+    const currentTimeEl = document.getElementById(
+      "current-time",
+    ) as HTMLSpanElement;
     const durationEl = document.getElementById("duration") as HTMLSpanElement;
-    const skipBackBtn = document.getElementById("skip-back") as HTMLButtonElement;
-    const skipForwardBtn = document.getElementById("skip-forward") as HTMLButtonElement;
+    const skipBackBtn = document.getElementById(
+      "skip-back",
+    ) as HTMLButtonElement;
+    const skipForwardBtn = document.getElementById(
+      "skip-forward",
+    ) as HTMLButtonElement;
     const muteBtn = document.getElementById("mute-btn") as HTMLButtonElement;
-    const volumeSlider = document.getElementById("volume-slider") as HTMLInputElement;
+    const volumeSlider = document.getElementById(
+      "volume-slider",
+    ) as HTMLInputElement;
     const loopBtn = document.getElementById("loop-btn") as HTMLButtonElement;
 
     const repeatIcon = loopBtn.querySelector(".repeat-icon");
     const repeatOneIcon = loopBtn.querySelector(".repeat-one-icon");
-    const playSpinner = document.getElementById("play-spinner") as unknown as SVGSVGElement;
+    const playSpinner = document.getElementById(
+      "play-spinner",
+    ) as unknown as SVGSVGElement;
     const playArrow = playIcon.querySelector(".play-arrow");
     const pauseIcon = playIcon.querySelector(".pause-icon");
     const volumeUp = muteBtn?.querySelector(".volume-up");
@@ -130,7 +146,8 @@ import RepeatOne from "../icons/google-icons/repeat-one.svg";
     const surahNumber = parseInt(recitationBar!.dataset.surahNumber!);
 
     // Get selected reciter from localStorage, fallback to default
-    const reciter = localStorage.getItem("recitation-reciter") || defaultReciter;
+    const reciter =
+      localStorage.getItem("recitation-reciter") || defaultReciter;
 
     const player = new AudioPlayer(
       {
@@ -154,9 +171,11 @@ import RepeatOne from "../icons/google-icons/repeat-one.svg";
         volumeOff,
       },
       reciter,
-      surahNumber
+      surahNumber,
     );
 
-    window.addEventListener('reciterChanged', (e: any) => player.changeReciter(e.detail));
+    window.addEventListener("reciterChanged", (e: any) =>
+      player.changeReciter(e.detail),
+    );
   });
 </script>
